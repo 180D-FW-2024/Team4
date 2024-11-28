@@ -4,11 +4,26 @@ import time
 from datetime import datetime, timedelta
 
 
+def process_voice_input(audio_data):
+    """
+    Processes audio data to extract recognized text using Google Speech Recognition.
+    """
+    try:
+        return recognizer.recognize_google(audio_data, show_all=True)
+    except sr.UnknownValueError:
+        print("Could not understand the audio. Waiting for the next input...")
+        return None
+    except sr.RequestError as e:
+        print(f"Speech recognition service error: {e}")
+        return None
+
+
 def listen_for_commands(command_queue, max_duration):
     """
     Continuously listens for voice commands for a specified duration.
     Sends recognized commands to the command queue.
     """
+    global recognizer  
     recognizer = sr.Recognizer()
     keywords = {
         "activate": ["start system", "system on", "activate", "begin", "wake up"],
@@ -28,7 +43,9 @@ def listen_for_commands(command_queue, max_duration):
                 print(f"[{datetime.now().strftime('%H:%M:%S')}] Listening for commands...")
                 audio = recognizer.listen(mic, timeout=10, phrase_time_limit=5)
                 print("Audio input detected. Processing...")
-                result = recognizer.recognize_google(audio, show_all=True)
+                
+                # Use refactored process_voice_input function
+                result = process_voice_input(audio)
 
                 if result and "alternative" in result:
                     command_text = result["alternative"][0]["transcript"].lower()
@@ -42,10 +59,6 @@ def listen_for_commands(command_queue, max_duration):
 
             except sr.WaitTimeoutError:
                 print(f"[{datetime.now().strftime('%H:%M:%S')}] Timeout: No speech detected.")
-            except sr.UnknownValueError:
-                print("Speech not clear. Waiting for the next input...")
-            except sr.RequestError as e:
-                print(f"Speech recognition service error: {e}")
             except Exception as ex:
                 print(f"Unexpected error: {ex}")
     
@@ -109,3 +122,4 @@ def control_system():
 
 if __name__ == '__main__':
     control_system()
+
