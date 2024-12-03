@@ -20,7 +20,7 @@ keywords = {
 }
 
 # Initial state
-boolean_value = False
+boolean_value = True
 
 def listen_for_commands():
     """
