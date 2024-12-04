@@ -1,6 +1,6 @@
 import subprocess
 
-sound_file = "mixkit-classic-alarm-995.wav"
+sound_file = "alarm_regular.wav"
 
 def ring_alarm(sound_file=sound_file):
     """

@@ -26,6 +26,7 @@ class Speech_Recognition_Data:
         Updates the shared state in real-time.
         """
         print(f"Listening on {self.udp_ip}:{self.udp_port}")
+        oldValue = None
         while True:
             try:
                 # Receive data
@@ -33,13 +34,21 @@ class Speech_Recognition_Data:
                 
                 # Decode the message and interpret as a boolean
                 value = True if data.decode() == "1" else False
+                message = "NightWatcher Activated" if value else "NightWatcher Deactivated"
 
+                if oldValue is None:
+                    send_message(message=message)
+                    oldValue = value
+                else:
+                    if (oldValue != value):
+                        send_message(message=message)
+                        oldValue = value
+                        
                 # Update the shared state
                 with self.lock:
                     self.received_value = value
-               
-                # Debug output
-                send_message(message=f"Received: {value} from {addr}")
+                
+                
             except Exception as e:
                 print(f"Error receiving data: {e}")
 

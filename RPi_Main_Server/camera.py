@@ -1,5 +1,6 @@
 import cv2
 from ultralytics import YOLO
+from rover_activation import rover_toggle
 from phycv.vlight import VLight
 
 class Camera:
@@ -17,7 +18,7 @@ class Camera:
 
     def get_annotated_frame(self):
         return self.annotated_frame
-        
+       
     def run(self):
         """
         Start the camera loop and perform detection.
@@ -48,6 +49,12 @@ class Camera:
                 for box in detections:
                     x1, y1, x2, y2 = box.xyxy[0].tolist()  # Get bounding box coordinates
                     self.object_coordinates.append((x1, y1, x2, y2))  # Append to the list
+
+                if rover_toggle.getcurrentState() is True:
+                    rover_toggle.toggle_and_send()
+            else:
+                if rover_toggle.getcurrentState() is False:
+                    rover_toggle.toggle_and_send()
 
             # Visualize the results on the frame
             self.annotated_frame = results[0].plot()
