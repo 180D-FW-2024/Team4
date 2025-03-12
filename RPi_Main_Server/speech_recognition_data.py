@@ -1,4 +1,5 @@
 import socket
+import time
 import threading
 from telegram_bot import send_message
 
@@ -7,50 +8,57 @@ class Speech_Recognition_Data:
     A class-based UDP receiver that listens for incoming speech recognition data
     and updates a shared state in real-time.
     """
-    def __init__(self, udp_ip="0.0.0.0", udp_port=5200):
+    def __init__(self, system_manager, udp_ip="0.0.0.0", udp_port=5200):
         """
         Initialize the UDP receiver.
         :param udp_ip: IP address to bind to.
         :param udp_port: Port to bind to.
         """
+        self.system_manager = system_manager
         self.udp_ip = udp_ip
         self.udp_port = udp_port
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.sock.bind((self.udp_ip, self.udp_port))
         self.received_value = False  # Shared state for the latest received value
         self.lock = threading.Lock()  # Lock for thread safety
+        
+        self.last_received_time = time.time()
+        self.activation_duration = 5  # Auto-deactivate after 5 seconds
+        self.old_value = None
 
     def listen(self):
-        """
-        Continuously listens for incoming UDP messages.
-        Updates the shared state in real-time.
-        """
         print(f"Listening on {self.udp_ip}:{self.udp_port}")
-        oldValue = None
+        threading.Thread(target=self.check_timeout, daemon=True).start()
+        
         while True:
             try:
-                # Receive data
-                data, addr = self.sock.recvfrom(1024)  # Buffer size is 1024 bytes
+                data, addr = self.sock.recvfrom(1024)
+                value = data.decode() == "1"
                 
-                # Decode the message and interpret as a boolean
-                value = True if data.decode() == "1" else False
-                message = "NightWatcher Activated" if value else "NightWatcher Deactivated"
-
-                if oldValue is None:
-                    send_message(message=message)
-                    oldValue = value
-                else:
-                    if (oldValue != value):
-                        send_message(message=message)
-                        oldValue = value
+                with self.lock:  # ATOMIC UPDATE
+                    self.last_received_time = time.time()
+                    if self.old_value != value:
+                        message = "NightWatcher Activated" if value else "NightWatcher Deactivated"
+                        send_message(message)
+                        self.system_manager.set_system_active(value)
+                        self.old_value = value
                         
-                # Update the shared state
-                with self.lock:
-                    self.received_value = value
-                
+                time.sleep(0.1)
                 
             except Exception as e:
                 print(f"Error receiving data: {e}")
+
+    def check_timeout(self):
+        """Auto-deactivate ONLY if system was previously active"""
+        while True:
+            with self.lock:
+                time_since_update = time.time() - self.last_received_time
+                if time_since_update > self.activation_duration:
+                    if self.old_value is True:  # Only deactivate if currently active
+                        send_message("NightWatcher Auto-Deactivated (Timeout)")
+                        self.system_manager.set_system_active(False)
+                        self.old_value = False
+            time.sleep(1)
 
     def get_value(self):
         """

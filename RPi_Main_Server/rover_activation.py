@@ -31,6 +31,6 @@ class BooleanToggleSender:
         return self.current_state
 
 # Replace '192.168.1.50' with the IP address of the device running the listener
-receiver_ip = "192.168.245.59"
+receiver_ip = "100.94.66.58"
 receiver_port = 8891
 rover_toggle = BooleanToggleSender(receiver_ip, receiver_port)
