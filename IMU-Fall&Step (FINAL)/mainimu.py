@@ -398,4 +398,3 @@ while True:
         message = json.dumps({"fallDetected": fall_detect})
         sock.sendto(message.encode('utf-8'), (UDP_IP, UDP_PORT_FALL))
         #break
-
