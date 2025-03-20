@@ -110,8 +110,8 @@ def interpret_command(command: str) -> bool:
 
 GROQ_API_URL = "https://api.groq.com/openai/v1/audio/transcriptions"
 #API_KEY_AUDIO = "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"
-API_KEY_AUDIO = "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"
-#API_KEY_AUDIO = "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"
+#API_KEY_AUDIO = "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"
+API_KEY_AUDIO = "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"
 #API_KEY_AUDIO = "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"
 #API_KEY_AUDIO = "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"
 #API_KEY_AUDIO = "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"
