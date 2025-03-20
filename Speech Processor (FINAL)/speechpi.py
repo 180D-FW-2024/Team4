@@ -18,10 +18,7 @@ from langchain_groq import ChatGroq
 from langchain.prompts import ChatPromptTemplate
 from langchain.output_parsers import OutputFixingParser, PydanticOutputParser
 
-###############################################################################
-# 1) TEXT-TO-SPEECH (TTS) UTILITIES
-###############################################################################
-
+# TTS Utilities 
 async def synthesize_and_play(text: str):
     temp_mp3_path = None
     temp_wav_path = None
@@ -38,8 +35,8 @@ async def synthesize_and_play(text: str):
         subprocess.run(
             [
                 "ffmpeg", "-i", temp_mp3_path,
-                "-af", "volume=2.0",  # Amplify volume
-                "-y",                # Overwrite output
+                "-af", "volume=2.0",  
+                "-y",                
                 temp_wav_path
             ],
             check=True,
@@ -65,9 +62,7 @@ def speak(text: str):
     asyncio.run(synthesize_and_play(text))
 
 
-###############################################################################
-# 2) LLM SETUP: Use LangChain-Groq to interpret ON/OFF commands
-###############################################################################
+# LLM setup: Helps interpret ON/OFF commands 
 
 os.environ["GROQ_API_KEY"] = "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"
 
@@ -104,14 +99,12 @@ def interpret_command(command: str) -> bool:
         return None
 
 
-###############################################################################
-# 3) AUDIO TRANSCRIPTION: Using Groq’s Distil-Whisper endpoint
-###############################################################################
+# Audio Transcription utilizing Groq Distill-Whisper API
 
 GROQ_API_URL = "https://api.groq.com/openai/v1/audio/transcriptions"
 #API_KEY_AUDIO = "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"
-#API_KEY_AUDIO = "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"
-API_KEY_AUDIO = "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"
+API_KEY_AUDIO = "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"
+#API_KEY_AUDIO = "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"
 #API_KEY_AUDIO = "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"
 #API_KEY_AUDIO = "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"
 #API_KEY_AUDIO = "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"
@@ -151,8 +144,11 @@ def send_audio_to_groq(audio):
 # 4) MAIN LOGIC: Wake phrase, stop phrase, command toggling
 ###############################################################################
 
+# Below is the main logic for waking up, stopping the speech nightwatcher and 
+# toggle commands and such
+
 recognizer = sr.Recognizer()
-boolean_value = False  # <-- CHANGED HERE: start off
+boolean_value = False  
 watcher_activated = False
 
 WAKE_PHRASES = [
@@ -195,7 +191,7 @@ def listen_for_commands():
 
                 print(f"Recognized speech: '{command_text}'")
 
-                # Case 1: Not activated => check for wake phrase
+                # Case 1: Not activated, then check for wake phrase
                 if not watcher_activated:
                     if is_wake_phrase(command_text):
                         watcher_activated = True
@@ -205,14 +201,14 @@ def listen_for_commands():
                         print("No wake phrase detected. Waiting...")
                     continue
 
-                # Case 2: If activated => check for "goodbye"
+                # Case 2: If activated then check for goodbye phrase
                 if is_stop_phrase(command_text):
                     print("Heard goodbye phrase. Deactivating watcher.")
                     watcher_activated = False
                     speak("Goodbye! I'll stop listening now.")
                     continue
 
-                # Case 3: Process command for on/off/activate/deactivate only if it appears to be a valid system command.
+                # Case 3: Proccess command if voice input seems valid
                 if "system" not in command_text or not (("on" in command_text) or ("off" in command_text) or ("activate" in command_text) or ("deactivate" in command_text)):
                     print("Command text does not appear to be a valid system command. Ignoring.")
                     continue
@@ -237,19 +233,15 @@ def listen_for_commands():
             except sr.RequestError as e:
                 print(f"Speech recognition service error: {e}")
 
-
-###############################################################################
-# 5) UDP SENDER LOGIC
-###############################################################################
-
+# UDP Sender Logic
+ 
 UDP_IP = "100.75.217.43"
 UDP_PORT = 5200
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
-###############################################################################
-# 6) LAUNCH THE LISTENER THREAD & PERIODICALLY SEND STATE
-###############################################################################
+
+# Launching thread usage to periodically send state of command
 
 listener_thread = threading.Thread(target=listen_for_commands, daemon=True)
 listener_thread.start()
@@ -258,7 +250,6 @@ try:
     while True:
         print(f"Current system state: {boolean_value} | Watcher Activated: {watcher_activated}")
 
-        # Convert bool -> "1" or "0"
         message = "1" if boolean_value else "0"
 
         try:
