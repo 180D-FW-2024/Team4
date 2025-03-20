@@ -1,44 +1,59 @@
-# Team4
+# Team 4: Sleepwalker Detection System
 
-This is a Sleepwalker detection project with its intended usage to be a monitoring Internet of Things Sytem (IoT). This has multiples components that we will list below and how to run. So far there are 3 Agents with various codes to be run for the Nightwatcher to be effectively working. 
+## Project Overview
+This is a **Sleepwalker Detection Project**, designed as a monitoring **Internet of Things (IoT) System**. The system consists of multiple components working together to ensure real-time detection and response. Currently, there are **three agents** with various codes that must be executed for the **Nightwatcher** system to function effectively.
+
+---
 
 # Installation and Setup
 
 ## Prerequisites
 Ensure you have **Python 3.x** installed on your system.
 
+---
 
-## How to run the Speech Processor 
+# How to Run the Speech Processor
+
 ## Install Dependencies
 Run the following command to install the required Python libraries:
 ```bash
 pip install speechrecognition requests edge-tts langchain langchain_groq groq pydantic
 ```
-### Running the Speech Processor
+
+## Hardware Setup
+Ensure that both the **microphone and speaker** are connected to the Raspberry Pi before running the speech processor unit.
+
+## Running the Speech Processor
 ```bash
 python speechpi.py
 ```
 
-### How to run the Autonmous Rover system with Object Detection
+---
+
+# How to Run the Autonomous Rover System with Object Detection
+
 ## Install Dependencies
-Run the following command to instal the required Python libraries: 
+Run the following command to install the required Python libraries:
 ```bash
 pip install opencv-python numpy pyserial
 ```
-## Installing and Understanding the 'Object_Detection_Files' Folder
-- `coco.names` is a list of class labels for object detection (e.g., "person", "car") to help identify what the Rover is looking at.
-- `frozen_inference_graph.pb` is a pre-trained TensorFlow model for object detection.
-- `ssd_mobilenet_v3_large_coco_2020_01_14.pbtxt` is the  Configuration file for the SSD MobileNet model.
 
-## Create a Folder with all files and dependencies 
-Within a folder for example called "Rover Activation" include the following scripts in the folder. 
-- 'cam_CPU.py'
-- 'receiver.py'
-- 'motor.py'
-- 'main.py'
-- 'Object_Detection_Files'
-  
-## Starting up the Rover: assuming main is the activation code within Rover Folder 
+## Understanding the `Object_Detection_Files` Folder
+The **`Object_Detection_Files`** folder is essential for object detection using the **SSD MobileNet** model in OpenCV. It includes:
+- **`coco.names`** → List of class labels for object detection (e.g., "person", "car").
+- **`frozen_inference_graph.pb`** → Pre-trained TensorFlow model for object detection.
+- **`ssd_mobilenet_v3_large_coco_2020_01_14.pbtxt`** → Configuration file for the SSD MobileNet model.
+
+## Setting Up the Rover System
+Create a folder, for example, **`Rover Activation`**, and include the following scripts inside it:
+- `cam_CPU.py`
+- `receiver.py`
+- `motor.py`
+- `main.py`
+- `Object_Detection_Files/` *(with the required model files inside)*
+
+## Starting the Rover System
+Assuming `main.py` is the activation script within the **Rover Activation** folder, run the following command:
 ```bash
-sudo python main.py 
+sudo python main.py
 ```
