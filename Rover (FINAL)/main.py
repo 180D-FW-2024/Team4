@@ -10,25 +10,22 @@ from cam_CPU import getObjects, thres, nms, classNames
 from motor import Motor
 
 def main():
-    # ----------------------------------------------------
-    # 1) Initialize UDP Components
-    # ----------------------------------------------------
-    # Video streaming configuration
+    # Intializing UDP Componetns and video streaming
     RECEIVER_IP = "100.75.217.43"
     UDP_PORT = 5055
     JPEG_QUALITY = 70
-    MAX_DGRAM = 65507  # Max UDP payload size
+    MAX_DGRAM = 65507  # Max UDP size
 
-    # Create UDP socket
+    # Creating UDP socket
     udp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     
-    # Frame sharing between threads
+    # Frame sharing between seperate threads
     latest_frame = None
     frame_lock = threading.Lock()
 
-    # ----------------------------------------------------
-    # 2) Initialize State Receiver
-    # ----------------------------------------------------
+    send_frame_counter = 0
+
+    # Initializing State receiver
     receiver_ip = "0.0.0.0"
     receiver_port = 8891
     rover_receiver = BooleanToggleReceiver(receiver_ip, receiver_port)
@@ -36,9 +33,7 @@ def main():
     receiver_thread = threading.Thread(target=rover_receiver.listen_for_state, daemon=True)
     receiver_thread.start()
 
-    # ----------------------------------------------------
-    # 3) Initialize Motor and Camera
-    # ----------------------------------------------------
+    # Initializing the Motor and Camera modules
     motor = Motor()
     
     cap = cv2.VideoCapture(0)
@@ -49,37 +44,39 @@ def main():
         print("Failed to open camera.")
         return
 
-    # ----------------------------------------------------
-    # 4) UDP Streaming Thread
-    # ----------------------------------------------------
+    # Streaming Thread for the UDP Connection
     def udp_sender():
+        nonlocal send_frame_counter  
+
         while True:
             if rover_receiver.current_state:
                 with frame_lock:
                     if latest_frame is not None:
-                        # JPEG encode
-                        _, buffer = cv2.imencode('.jpg', latest_frame, 
-                                            [cv2.IMWRITE_JPEG_QUALITY, JPEG_QUALITY])
-                        datagram = buffer.tobytes()
-                        size = len(datagram)
-                        
-                        try:
-                            # Send header
-                            udp_socket.sendto(struct.pack("!I", size), (RECEIVER_IP, UDP_PORT))
-                            # Send chunks
-                            for i in range(0, size, MAX_DGRAM):
-                                chunk = datagram[i:i+MAX_DGRAM]
-                                udp_socket.sendto(chunk, (RECEIVER_IP, UDP_PORT))
-                        except Exception as e:
-                            print(f"UDP Send Error: {str(e)}")
+                        send_frame_counter += 1
+                        if send_frame_counter % 10 == 0:
+                            # encoding the JPEG
+                            _, buffer = cv2.imencode('.jpg', latest_frame, 
+                                                     [cv2.IMWRITE_JPEG_QUALITY, JPEG_QUALITY])
+                            datagram = buffer.tobytes()
+                            size = len(datagram)
+                            
+                            try:
+                                # Sending header
+                                udp_socket.sendto(struct.pack("!I", size), (RECEIVER_IP, UDP_PORT))
+
+                                # Send packets at a time 
+                                for i in range(0, size, MAX_DGRAM):
+                                    chunk = datagram[i:i+MAX_DGRAM]
+                                    udp_socket.sendto(chunk, (RECEIVER_IP, UDP_PORT))
+                            except Exception as e:
+                                print(f"UDP Send Error: {str(e)}")
+
             time.sleep(0.01)
 
     send_thread = threading.Thread(target=udp_sender, daemon=True)
     send_thread.start()
 
-    # ----------------------------------------------------
-    # 5) Main Processing Loop
-    # ----------------------------------------------------
+    # Main processing Loop
     print("[INFO] Starting main loop. Rover will wait for activation signal...")
 
     try:
@@ -98,11 +95,11 @@ def main():
             frame_flipped = cv2.flip(frame, 0)
             result, objectInfo = getObjects(frame_flipped, thres, nms, objects=["person"])
 
-            # Update shared frame
+            # Updating the shared frame to main server
             with frame_lock:
                 latest_frame = result
 
-            # Person detection logic
+            # Logic for person detection
             if objectInfo:
                 box, className = objectInfo[0]
                 x, y, w, h = box
@@ -114,7 +111,7 @@ def main():
                 offset_norm = offset_x / half_width
                 turn_val = offset_norm * 0.6
 
-                # Motor control
+                # Motor controls
                 forward_val = 0.4 if area > 50000 else -0.4
                 left_motor = max(min(forward_val - turn_val, 0.5), -0.5)
                 right_motor = max(min(forward_val + turn_val, 0.5), -0.5)

@@ -5,13 +5,12 @@ class BooleanToggleReceiver:
     def __init__(self, ip_address, port):
         self.ip_address = ip_address
         self.port = port
-        self.current_state = False  # Tracks whether the rover should be active or not
+        # The current state helps track whether rover should be activated or deactivated
+        self.current_state = False 
         
-        # Create and bind a UDP socket to listen for messages
+        # Creating and binding UDP socket for message listening
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
-        # If .local resolution is supported, binding directly by hostname may work:
-        # Alternatively, you can bind to '0.0.0.0' to listen on all interfaces:
         self.sock.bind((self.ip_address, self.port))
         
         print(f"Listening on {self.ip_address}:{self.port} for toggle messages...")
@@ -30,18 +29,16 @@ class BooleanToggleReceiver:
                 if not self.current_state:
                     self.current_state = True
                     print("Rover Activated")
-                    # Insert logic to start/enable the rover here
-                    # e.g., motor.start() or similar
+                    
             elif message == "False":
                 if self.current_state:
                     self.current_state = False
                     print("Rover Deactivated")
-                    # Insert logic to stop/disable the rover here
-                    # e.g., motor.stop() or similar
+                 
             else:
                 print(f"Ignored unknown message: {message}")
 
-            # Short sleep to prevent tight looping
+            # Short sleep to prevent instant looping
             time.sleep(0.1)
 
 if __name__ == "__main__":
