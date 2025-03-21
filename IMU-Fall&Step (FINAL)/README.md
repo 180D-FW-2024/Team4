@@ -19,7 +19,10 @@ It communicates data via UDP communication transmissions for real-time falling d
 - Socket
 
 ## Usage
-Run `mainimu.py` to start the IMU features of the Nightwatcher system.
+Run `mainimu.py` (saved alongside the other files in this folder) to start the IMU features of the Nightwatcher system.
+```bash
+python mainimu.py
+```
 
 ## Code Origin and Design Decisions
 - The .py scripts alongside the mainimu.py are from Ozzmaker's BerryIMU github, where it provides a library for reading the angles from the accelerometer, gyroscope, and magnetometer on a BerryIMU connected to a Raspberry Pi.
