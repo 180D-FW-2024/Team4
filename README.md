@@ -12,6 +12,20 @@ Ensure you have **Python 3.x** installed on your computer, our development was c
 
 ---
 
+## Necessary folders for installation 
+### 1) RPI Main Server
+Access the subfolder RPI_Main_Sever and read its README.md 
+
+### 2) IMU and Stepcounter
+Access the subfolder IMU-Fall%Step (FINAL) and read its README.md
+
+### 3) Speech Processor 
+Access the subfolder Speech Processor (FINAL) and read its README.md 
+
+### 4) Autonmous Rover
+Access the subfolder Rover(FINAL_) and read its README.md
+
+
 ## Where to find instructions for each Unit (Total of 4 subfolders) 
 
 Within each folder IMU-Fall&Step (FINAL), Speech Processor (FINAL), Rover (FINAL), RPi_Main_Server, will each individually have their own README.md file that displays instruction on how to set up each subunit.
