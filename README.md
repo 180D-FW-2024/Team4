@@ -12,14 +12,14 @@ Ensure you have **Python 3.x** installed on your computer, our development was c
 
 ---
 
-# Where to find instructions for each Unit (Total of 4 subfolders) 
+## Where to find instructions for each Unit (Total of 4 subfolders) 
 
 Within each folder IMU-Fall&Step (FINAL), Speech Processor (FINAL), Rover (FINAL), RPi_Main_Server, will each individually have their own README.md file that displays instruction on how to set up each subunit.
 
 
-# User Manual for full instructions 
+## User Manual for full instructions 
 For full description and instruction on how to utilize Nightwatcher, Here is the user manual provided.
 
 
-# Order on how to run each unit in the Nightwatcher system
+## Order on how to run each unit in the Nightwatcher system
 It is advisable that the Speech Processor, IMU, and Rover setup scripts to be run first and activating the Main Server last. As this would ensure reproduceabiltiy and accuracy of desired results for this to be an effective IoT system for Sleepwalking Monitoring.
