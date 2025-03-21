@@ -32,7 +32,7 @@ Within each folder IMU-Fall&Step (FINAL), Speech Processor (FINAL), Rover (FINAL
 
 
 ## User Manual for full instructions 
-For full description and instruction on how to utilize Nightwatcher, Here is the user manual provided.
+For full description and instruction on how to utilize Nightwatcher, click the file in the repository called User_Manual.pdf.
 
 
 ## Order on how to run each unit in the NightWatcher system
