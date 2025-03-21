@@ -17,7 +17,7 @@ Ensure you have **Python 3.x** installed on your computer, our development was c
 Access the subfolder RPI_Main_Sever
 
 ### 2) IMU and Stepcounter
-Access the subfolder IMU-Fall%Step (FINAL) 
+Access the subfolder IMU-Fall&Step (FINAL) 
 
 ### 3) Speech Processor 
 Access the subfolder Speech Processor (FINAL) 
