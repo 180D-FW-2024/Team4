@@ -8,7 +8,7 @@ This is a **Sleepwalker Detection Project**, designed as a monitoring **Internet
 # Installation and Setup
 
 ## Prerequisites
-Ensure you have **Python 3.x** installed on your system.
+Ensure you have **Python 3.x** installed on your computer, our development was catered to be mainly used on the Raspberry Pi 4.
 
 ---
 
