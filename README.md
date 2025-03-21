@@ -21,5 +21,5 @@ Within each folder IMU-Fall&Step (FINAL), Speech Processor (FINAL), Rover (FINAL
 For full description and instruction on how to utilize Nightwatcher, Here is the user manual provided.
 
 
-# Order on how to run each in system
+# Order on how to run each unit in the Nightwatcher system
 It is advisable that the Speech Processor, IMU, and Rover setup scripts to be run first and activating the Main Server last. As this would ensure reproduceabiltiy and accuracy of desired results for this to be an effective IoT system for Sleepwalking Monitoring.
