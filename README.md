@@ -1,4 +1,4 @@
-# Team 4: Sleepwalker Detection System
+# Team 4: NightWatcher (Sleepwalker Detection System)
 
 ## Project Overview
 This is a **Sleepwalker Detection Project**, designed as a monitoring **Internet of Things (IoT) System**. The system consists of multiple components working together to ensure real-time detection and response. Currently, there are **three agents** with various codes that must be executed for the **Nightwatcher** system to function effectively.
@@ -21,5 +21,5 @@ Within each folder IMU-Fall&Step (FINAL), Speech Processor (FINAL), Rover (FINAL
 For full description and instruction on how to utilize Nightwatcher, Here is the user manual provided.
 
 
-## Order on how to run each unit in the Nightwatcher system
+## Order on how to run each unit in the NightWatcher system
 It is advisable that the Speech Processor, IMU, and Rover setup scripts to be run first and activating the Main Server last. As this would ensure reproduceabiltiy and accuracy of desired results for this to be an effective IoT system for Sleepwalking Monitoring.
