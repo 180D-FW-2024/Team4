@@ -12,10 +12,13 @@ Ensure you have **Python 3.x** installed on your computer, our development was c
 
 ---
 
-# Looking into each setup
+# Where to find instructions for each Unit (Total of 4 subfolders) 
 
 Within each folder IMU-Fall&Step (FINAL), Speech Processor (FINAL), Rover (FINAL), RPi_Main_Server, will each individually have their own README.md file that displays instruction on how to set up each subunit.
 
+
+## User Manual for full instructions 
+For full description and instruction on how to utilize Nightwatcher, Here is the user manual provided.
 
 
 # Order on how to run each in system
