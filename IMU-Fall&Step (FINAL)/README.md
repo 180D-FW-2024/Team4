@@ -1,4 +1,4 @@
-## mainimu.py – Fall Detection & Step Counter
+## Fall Detection & Step Counter
 
 The `mainimu.py` script is the source code and is the Nightwatcher's fall detection and step counter algorithms combined into one runnable code.
 
